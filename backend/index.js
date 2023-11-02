@@ -1,24 +1,26 @@
 import express from "express";
 import mysql from "mysql"
+import cors from 'cors'
 
 const app = express()
+app.use(cors())
+app.use(express.json())
 
 const db = mysql.createConnection({
     host: "localhost",
     user: "root",
     password: "",
-    database: "redsox"
+    database: "redsox",
 })
 
-app.use(express.json())
 
 app.get("/", (req,res)=>{
     res.json("This is the backend")
 })
 
 app.get("/roster", (req,res)=>{
-    const query = "SELECT* FROM roster"
-    db.query(query, (err,date)=>{
+    const query = "SELECT * FROM roster"
+    db.query(query, (err,data)=>{
         if(err) return res.json(err)
         return res.json(data)
     })
