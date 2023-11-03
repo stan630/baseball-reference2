@@ -38,7 +38,7 @@ return(
         <tbody>
           {players.map((player) => (
             
-              <tr key={player.id}>
+              <tr key={player.user_id}>
                 <td>{player.user_id}</td>
                 <td>{player.first_name}</td>
                 <td>{player.last_name}</td>
@@ -50,7 +50,7 @@ return(
           ))}
         </tbody>
       </Table>
-      <Button as="a"variant="secondary" size="med" style = {{backgroundColor:"#d64b4b" }}>
+      <Button variant="secondary" size="med" style = {{backgroundColor:"#d64b4b" }}>
         <Link to="/add">Add a Player</Link>
       </Button>
     </div>

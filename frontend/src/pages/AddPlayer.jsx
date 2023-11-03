@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 // import '../App.css'
 import Button from "react-bootstrap/esm/Button";
 import Form from "react-bootstrap/Form";
@@ -22,15 +22,19 @@ const AddPlayer = (props) => {
     formState: { errors },
   } = useForm();
 
+  const [error, setError] = useState(false)
+
+  const navigate = useNavigate()
+
   const handleChange = (e) => {
-    setInput();
+    setInput(prev=>({...prev, [e.target.name]: e.target.value}));
   };
 
   const handleClick = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:8000/roster,input");
-      navigate = "/";
+      await axios.post("http://localhost:8000/roster",input);
+    navigate("/")
     } catch (err) {
       console.log(err);
     }
@@ -47,10 +51,10 @@ const AddPlayer = (props) => {
             onChange={handleChange}
             placeholder="First Name"
             name="first_name"
-            {...register("first_name", {
-              required: true,
-              pattern: "^[A-Za-z]{2,}$",
-            })}
+            // {...register("first_name", {
+            //   required: true,
+            //   pattern: "^[A-Za-z]{2,}$",
+            // })}
           />
           {errors.firstname && <p>Name must contain at least 2 letters</p>}
         </div>
@@ -61,10 +65,10 @@ const AddPlayer = (props) => {
             onChange={handleChange}
             placeholder="Last Name"
             name="last_name"
-            {...register("last_name", {
-              required: true,
-              pattern: "^[A-Za-z]{2,}$",
-            })}
+            // {...register("last_name", {
+            //   required: true,
+            //   pattern: "^[A-Za-z]{2,}$",
+            // })}
           />
           {errors.lastname && <p>Name must contain at least 2 letters</p>}
         </div>
@@ -75,7 +79,7 @@ const AddPlayer = (props) => {
             onChange={handleChange}
             placeholder="Age"
             name="age"
-            {...register("age", { required: true })}
+            // {...register("age", { required: true })}
           />
         </div>
         <div className="mb-3">
@@ -85,7 +89,7 @@ const AddPlayer = (props) => {
             onChange={handleChange}
             placeholder="Email"
             name="email"
-            {...register("email", { required: true })}
+            // {...register("email", { required: true })}
           />
         </div>
         <select
@@ -105,7 +109,8 @@ const AddPlayer = (props) => {
         </select>
       </form>
       <div className="text-center mt-3">
-      <button onClick={handleClick}>Add player</button>
+      <button className="btn btn-danger" onClick={handleClick}>Add player</button>
+      
       </div>
       
     </div>
