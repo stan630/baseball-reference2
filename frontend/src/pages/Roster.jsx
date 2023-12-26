@@ -22,7 +22,7 @@ useEffect(()=>{
 },[])
 
 return(
-    <div>
+    <div className="container">
         <h2 style={{ textAlign: "center"}}>Red Sox Roster</h2>
         <Table striped bordered hover>
         <thead>
@@ -50,9 +50,9 @@ return(
           ))}
         </tbody>
       </Table>
-      <Button variant="secondary" size="med" style = {{backgroundColor:"#d64b4b" }}>
-        <Link to="/add">Add a Player</Link>
-      </Button>
+      <button  className="btn btn-danger">
+        <Link className="text-white text-decoration-none" to="/add">Add a Player</Link>
+      </button>
     </div>
 )}
           

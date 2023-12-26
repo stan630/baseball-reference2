@@ -26,6 +26,14 @@ app.get("/roster", (req,res)=>{
     })
 })
 
+app.get("/users", (req,res)=>{
+    const query = "SELECT * FROM users"
+    db.query(query, (err,data)=>{
+        if(err) return res.json(err)
+        return res.json(data)
+    })
+})
+
 app.post("/roster", (req,res)=>{
     const query = "INSERT INTO roster (`first_name`, `last_name`,`age`,`email`,`position`) VALUES(?)"
     const values = [
@@ -40,6 +48,22 @@ app.post("/roster", (req,res)=>{
         return res.json("A player has been added")
     })
 })
+
+app.post("/users", (req,res)=>{
+    const query = "INSERT INTO users (`first_name`, `last_name`,`email`,`password`) VALUES(?)"
+    const values = [
+        req.body.first_name,
+        req.body.last_name,
+        req.body.email,
+        req.body.password,
+    ]
+    db.query(query,[values], (err,data) => {
+        if(err) return res.json(err)
+        return res.json("Sign In successful")
+    })
+})
+
+
 
 app.listen(8000, ()=>{
     console.log("Connected to backend")

@@ -18,6 +18,7 @@ const AddPlayer = (props) => {
 
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors },
   } = useForm();
@@ -34,6 +35,7 @@ const AddPlayer = (props) => {
     e.preventDefault();
     try {
       await axios.post("http://localhost:8000/roster",input);
+      alert("Player successfully added!")
     navigate("/")
     } catch (err) {
       console.log(err);
@@ -51,12 +53,15 @@ const AddPlayer = (props) => {
             onChange={handleChange}
             placeholder="First Name"
             name="first_name"
-            // {...register("first_name", {
-            //   required: true,
-            //   pattern: "^[A-Za-z]{2,}$",
-            // })}
+        //    {...register("first_name", {
+        //       required: {
+        //         value: true,
+        //         message: "First Name is required"
+        //       },
+             
+        //     })}
           />
-          {errors.firstname && <p>Name must contain at least 2 letters</p>}
+          <p>{errors.firstname?.message} </p>
         </div>
         <div className="mb-3">
           <input
@@ -67,7 +72,7 @@ const AddPlayer = (props) => {
             name="last_name"
             // {...register("last_name", {
             //   required: true,
-            //   pattern: "^[A-Za-z]{2,}$",
+            //   message: "Last Name is required"
             // })}
           />
           {errors.lastname && <p>Name must contain at least 2 letters</p>}
@@ -77,9 +82,9 @@ const AddPlayer = (props) => {
             className="form-control"
             type="number"
             onChange={handleChange}
-            placeholder="Age"
             name="age"
-            // {...register("age", { required: true })}
+            placeholder="Age"
+                // {...register("age", { required: true })}
           />
         </div>
         <div className="mb-3">
@@ -89,14 +94,20 @@ const AddPlayer = (props) => {
             onChange={handleChange}
             placeholder="Email"
             name="email"
-            // {...register("email", { required: true })}
-          />
+            // {...register("email", { 
+            //     pattern: {
+            //         value:/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
+            //         message: 'Invalid email format'
+            //     }, 
+            // })}
+            />
         </div>
         <select
           className="form-select mb-3"
           name="position"
           id="position"
           onChange={handleChange}
+        //   {...register("position")}
         >
           <option selected>Select a position</option>
           <option value={"Pitcher"}>Pitcher</option>
