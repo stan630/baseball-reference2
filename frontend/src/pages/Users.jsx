@@ -1,12 +1,19 @@
 import { useState } from "react";
 import axios from 'axios'
 import { Link, useNavigate } from "react-router-dom";
+import * as yup from 'yup'
 import { useForm } from "react-hook-form"
+import { yupResolver } from '@hookform/resolvers/yup'
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 
+const schema = yup.object({
+    first_name: yup.string().required()
+})
 
-const Users = (props) => {
+
+
+const Users = () => {
     const [loginSignin, setLoginSignin] = useState({
         first_name: "",
         last_name: "",
@@ -19,15 +26,19 @@ const {
     control,
     handleSubmit,
     formState: {errors},
-} = useForm()
+} = useForm({
+    resolver: yupResolver(schema)
+})
 
-const [error, setError] = useState(false)
+const onSubmit = (data) => console.log(data)
+
+console.log(errors)
 
 const navigate = useNavigate()
 
-const handleChange =  (e) => {
-    setLoginSignin(prev=>({...prev, [e.target.name]: e.target.value}))
-}
+// const handleChange =  (e) => {
+//     setLoginSignin(prev=>({...prev, [e.target.name]: e.target.value}))
+// }
 
 const handleClick =  async (e) => {
     e.preventDefault()
@@ -42,52 +53,40 @@ const handleClick =  async (e) => {
 
 return(
     <div className="container"><h2>Register</h2>
-        <form className="mt-4 pt-3 pb-2">
+        <form className="mt-4 pt-3 pb-2" onSubmit={handleSubmit(onSubmit)}>
             <div className="mb-3">
                 <input 
                 className="form-control"
                 type="text"
-                onChange={handleChange}
+                // onChange={handleChange}
                 placeholder="First Name"
                 name="first_name"
-                // {...register("first_name", {
-                //     required: {
-                //         value: true,
-                //         message: "First Name is required"
-                //     }
-                // })}
+                register = {{ ...register("first_name")}}
+                                
                 />
-                <p>{errors.first_name?.message}</p>
+                <div>
+                    {errors.name?.type === "required && first name requred"}
+                </div>
             </div>
             <div className="mb-3">
                 <input 
                 className="form-control"
                 type="text"
-                onChange={handleChange}
+                // onChange={handleChange}
                 placeholder="Last Name"
                 name="last_name"
-                // {...register("last_name", {
-                //     required: {
-                //         value: true,
-                //         message: "Last Name is required"
-                //     }
-                // })}
+                register= {{...register("last_name")}}
                 />
-                {errors.last_name && <p>Name must contain at least 2 letters</p>}
+                
             </div>
             <div className="mb-3">
                 <input 
                 className="form-control"
                 type="email"
-                onChange={handleChange}
+                // onChange={handleChange}
                 placeholder="Email"
                 name="email"
-                // {...register("email", {
-                //     required: {
-                //         value: true,
-                //         message: "Email is required"
-                //     }
-                // })}
+                register = {{...register("email")}} 
                 />
                 <p>{errors.email?.message}</p>
             </div>
@@ -95,21 +94,16 @@ return(
                 <input 
                 className="form-control"
                 type="password"
-                onChange={handleChange}
+                // onChange={handleChange}
                 placeholder="Password"
                 name="password"
-                // {...register("password", {
-                //     required: {
-                //         value: true,
-                //         message: "Password is required"
-                //     }
-                // })}
+                register = {{...register("email")}} 
                 />
                 <p>{errors.password?.message}</p>
             </div>
         
       </form>
-      <button  className="btn btn-danger text-white text-decoration-none"onClick={handleClick}>Submit</button>
+      <input  className="btn btn-danger text-white text-decoration-none"type="submit" onClick={handleClick}/>
     </div>
 )}
           

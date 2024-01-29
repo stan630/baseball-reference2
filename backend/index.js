@@ -49,19 +49,17 @@ app.post("/roster", (req,res)=>{
     })
 })
 
-app.post("/users", (req,res)=>{
-    const query = "INSERT INTO users (`first_name`, `last_name`,`email`,`password`) VALUES(?)"
-    const values = [
-        req.body.first_name,
-        req.body.last_name,
-        req.body.email,
-        req.body.password,
-    ]
-    db.query(query,[values], (err,data) => {
-        if(err) return res.json(err)
-        return res.json("Sign In successful")
+app.delete("/api/remove/:id", (req,res) => {
+    const {id} = req.params
+    const sqlRemove = 
+        "DELETE FROM roster WHERE id=?"
+    db.query(sqlRemove, id,(error, result) => {
+        if(error) {
+            console.log(error)
+        }
     })
 })
+
 
 
 
