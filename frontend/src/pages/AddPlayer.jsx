@@ -1,42 +1,79 @@
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import "./AddPlayer.css";
+import { toast } from "react-toastify";
 
-const AddPlayer = (props) => {
-  const [input, setInput] = useState({
-    first_name: "",
-    last_name: "",
-    age: "",
-    email: "",
-    position: "",
-  });
+const initialState = {
+  first_name: "",
+  last_name: "",
+  age: "",
+  email: "",
+  position: "",
+};
 
-  const {
-    register,
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+const AddPlayer = () => {
+  const [state, setState] = useState(initialState);
 
-  const [error, setError] = useState(false);
+  const { first_name, last_name, age, email, position } = state;
 
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    setInput((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  const { id } = useParams;
+
+  useEffect(() => {
+    axios.get(`http://localhost:8000/api/get/${id}`).then((resp) => setState({ ...resp.data[0] }));
+  }, [id]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!first_name || !last_name || !age || !email || !position) {
+      toast.error("A field is missing");
+    } else {
+      if (!id) {
+        axios.post("http://localhost:8000/api/post", {
+            first_name,
+            last_name,
+            age,
+            email,
+            position,
+          })
+          .then(() => {
+            setState({
+              first_name: "",
+              last_name: "",
+              age: "",
+              email: "",
+              position: ""
+            });
+          }).catch((err) => toast.error(err.response.data));
+        toast.success("Player successfully added!");
+      } else {
+        axios
+          .put(`http://localhost/api/update/${id}`, {
+            first_name,
+            last_name,
+            age,
+            email,
+            position,
+          }).then(() => {
+            setState({
+              first_name: "",
+              last_name: "",
+              age: "",
+              email: "",
+              position: "",
+            });
+          }).catch((err) => toast.error(err.response.data));
+        toast.success("Player updated successfully");
+      }
+      setTimeout(() => navigate("/"), 500);
+    }
   };
 
-  const handleClick = async (e) => {
-    e.preventDefault();
-    try {
-      await axios.post("http://localhost:8000/roster", input);
-      alert("Player successfully added!");
-      navigate("/");
-    } catch (err) {
-      console.log(err);
-    }
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setState({ ...state, [name]: value });
   };
 
   return (
@@ -56,7 +93,6 @@ const AddPlayer = (props) => {
           id="first_name"
           onChange={handleChange}
           placeholder="First Name"
-          value={name || ""}
           name="first_name"
         />
 
@@ -84,13 +120,13 @@ const AddPlayer = (props) => {
         />
 
         <select
-            style={{marginBottom: "2rem"}}
+          style={{ marginBottom: "2rem" }}
           name="position"
           id="position"
           onChange={handleChange}
           //   {...register("position")}
         >
-          <option selected>Select a position</option>
+          <option defaultValue={""}>Select a position</option>
           <option value={"Pitcher"}>Pitcher</option>
           <option value={"Catcher"}>Catcher</option>
           <option value={"First"}>First</option>
@@ -99,7 +135,7 @@ const AddPlayer = (props) => {
           <option value={"Shortstop"}>Shortstop</option>
           <option value={"Outfield"}>Outfield</option>
         </select>
-        <input type="submit" value="Save" />
+        <input type="submit" value={id ? "Update" : "Save"}/>
         <Link to="/">
           <input type="button" value="Go Back" />
         </Link>

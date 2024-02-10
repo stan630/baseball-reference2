@@ -15,6 +15,7 @@ function App() {
         <Routes>
           <Route exact path="/" element={<Roster />} />
           <Route path="/add" element={<AddPlayer />} />
+          <Route path="/update/:id" element={<AddPlayer/>} />
         </Routes>
       </div>
     </BrowserRouter>
